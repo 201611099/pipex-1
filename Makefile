@@ -6,7 +6,7 @@
 #    By: yunslee <yunslee@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/10 02:48:31 by yunslee           #+#    #+#              #
-#    Updated: 2021/07/14 21:33:53 by yunslee          ###   ########.fr        #
+#    Updated: 2021/07/15 03:23:23 by yunslee          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ library:
 	$(MAKE) -C ./libft/ all
 
 $(NAME) : library $(OBJS)
-	gcc $(OBJS) -L./libft -lft -o $(NAME)
+	gcc $(OBJS) -L./libft -lft -o $(NAME) -fsanitize=address -g3
 
 clean :
 	$(MAKE) -C ./libft/ clean

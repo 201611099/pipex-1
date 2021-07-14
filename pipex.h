@@ -6,7 +6,7 @@
 /*   By: yunslee <yunslee@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 03:36:50 by yunslee           #+#    #+#             */
-/*   Updated: 2021/07/13 04:41:21 by yunslee          ###   ########.fr       */
+/*   Updated: 2021/07/15 05:29:23 by yunslee          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,23 @@ typedef enum e_status
 	EXECVE
 }			t_status;
 
+typedef struct s_info
+{
+	char *filenameIn;
+	char **commandIn;
+	char *InAbsolutepath;
+	int fdIn;
 
+	char **commandOut;
+	char *filenameOut;
+	char *OutAbsolutepath;
+	int fdOut;
+}				t_info;
+
+void freeInfo(t_info *info);
+void freeAll(char **list);
+void printAll(char **list);
+void read_fd(int fd);
 
 
 #endif

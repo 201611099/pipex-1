@@ -1,0 +1,7 @@
+./pipex /dev/urandom cat "head -1" test1.txt
+./pipex test.txt cat "head -1" test1.txt
+
+
+< /dev/urandom cat | head -1 > test1.txt
+< /dev/urandom cat | head -1 > test1.txt
+< test.txt cat | head -1 > test1.txt
