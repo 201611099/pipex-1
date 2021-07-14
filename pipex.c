@@ -48,8 +48,8 @@ char *getAbsolutePath(char *command, char **pathList)
 	free(temp);
 	if (pathList[i] == NULL)
 	{
-		printf("command not found");
-		exit(127);
+		printf("command not found\n");
+		return (NULL);
 	}
 	return (temp2);
 }
@@ -86,15 +86,19 @@ int main(int argc, char *argv[], char **env)
 	}
 	t_info info;
 	ft_memset(&info, 0, sizeof(t_info));
-	char **pathlist = getPathList(env);
+	char **pathlist;
+	if (NULL == (pathlist = getPathList(env)))
+		return (1);
 	g_set(env);
 	setInfo(&info, argv, pathlist);
 	// printAll(pathlist);
+	(void )env;
 
 
 	if (access(info.filenameIn, R_OK) == -1)
 	{
 		print_status(NOFILE);
+		exit(1);
 	}
 	else
 	{
@@ -200,3 +204,7 @@ void read_fd(int fd)
 	}
 	printf("%s\n", buffer);
 }
+
+
+//  ./pipex_yunslee/pipex "./pipex-tester/assets/deepthought.txt" "cat" "ls" "./pipe-tester/outs/test-xx.txt"
+//  < "./pipex-tester/assets/deepthought.txt" cat  | ls > "./pipe-tester/outs/test-xx.txt"
