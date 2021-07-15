@@ -76,6 +76,8 @@ void setInfo(t_info *info, char *argv[], char **pathList)
 	info->OutAbsolutepath = getAbsolutePath(info->commandOut[0], pathList);
 }
 
+int	g_exist = 1; //hj
+
 int main(int argc, char *argv[], char **env)
 {
 	// TODO file 인지 폴더인지 먼저
@@ -98,13 +100,15 @@ int main(int argc, char *argv[], char **env)
 	if (access(info.filenameIn, R_OK) == -1)
 	{
 		print_status(NOFILE);
-		exit(1);
+		g_exist = 0; //hj
+//		exit(1); //hj
 	}
-	else
-	{
-		info.fdIn = open(info.filenameIn, O_RDONLY);
+//	else //hj
+//	{ //hj
+//		info.fdIn = open(info.filenameIn, O_RDONLY);
+		info.fdIn = open(info.filenameIn, O_CREAT | O_RDONLY, 0755); //hj
 		// dup2(info.fdIn, 0);
-	}
+//	} //hj
 	
 	if (access(info.filenameOut, W_OK) == -1)
 	{
@@ -133,6 +137,9 @@ int main(int argc, char *argv[], char **env)
 	{
 		waitpid(pid, NULL, 0); // 부모 프로세스
 	}
+
+	if (0 == g_exist) //hj
+		unlink(info.filenameIn); //hj
 
 	close(pipex[1]);
 	if (0 == (pid = fork())) // 자식 프로세스
