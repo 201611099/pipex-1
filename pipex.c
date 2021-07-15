@@ -5,13 +5,13 @@ void print_status(enum e_status status)
 	switch (status)
 	{
 	case INVALIDARG:
-		printf("Invalid arguments\n");
+		perror("Invalid arguments");
 		break;
 	case NOFILE:
-		printf("File doesn't exist\n");
+		perror("File doesn't exist");
 		break;
 	case EXECVE:
-		printf("EXECVE ERROR\n");
+		perror("EXECVE ERROR");
 		break;
 	default:
 		break;
@@ -23,9 +23,8 @@ char **getPathList(char **env)
 	int i = 0;
 	while (env[i] != NULL)
 	{
-		if (ft_strnstr(env[i], "PATH=/", ft_strlen(*env)))
+		if (ft_strnstr(env[i], "PATH=/", ft_strlen(env[i])))
 			break;
-		env++;
 		i++;
 	}
 	return (ft_split(env[i] + 5, ':'));
@@ -48,7 +47,7 @@ char *getAbsolutePath(char *command, char **pathList)
 	free(temp);
 	if (pathList[i] == NULL)
 	{
-		printf("command not found\n");
+		perror("command not found");
 		return (NULL);
 	}
 	return (temp2);
@@ -94,11 +93,14 @@ int main(int argc, char *argv[], char **env)
 	// printAll(pathlist);
 	(void )env;
 
+	int exist = 1;
 
 	if (access(info.filenameIn, R_OK) == -1)
 	{
 		print_status(NOFILE);
-		exit(1);
+		exist = 0;
+		info.fdIn = open(info.filenameIn, O_CREAT | O_RDONLY, 0755);
+//		exit(1);
 	}
 	else
 	{
@@ -125,7 +127,7 @@ int main(int argc, char *argv[], char **env)
 		// printf("%d\n", dup2(pipex[1], 1));
 		if (-1 == execve(info.InAbsolutepath, info.commandIn, g_env))
 		{
-			print_status(EXECVE);
+//			print_status(EXECVE);
 			exit(1);
 		}
 	}
@@ -133,7 +135,8 @@ int main(int argc, char *argv[], char **env)
 	{
 		waitpid(pid, NULL, 0); // 부모 프로세스
 	}
-
+	if (!exist)
+		unlink(info.filenameIn);
 	close(pipex[1]);
 	if (0 == (pid = fork())) // 자식 프로세스
 	{
@@ -142,7 +145,7 @@ int main(int argc, char *argv[], char **env)
 		dup2(info.fdOut, 1);
 		if (-1 == execve(info.OutAbsolutepath, info.commandOut, g_env))
 		{
-			print_status(EXECVE);
+//			print_status(EXECVE);
 			exit(1);
 		}
 	}
