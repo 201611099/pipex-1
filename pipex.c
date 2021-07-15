@@ -25,7 +25,6 @@ char **getPathList(char **env)
 	{
 		if (ft_strnstr(env[i], "PATH=/", ft_strlen(*env)))
 			break;
-		env++;
 		i++;
 	}
 	return (ft_split(env[i] + 5, ':'));
