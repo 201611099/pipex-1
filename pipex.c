@@ -23,7 +23,8 @@ char **getPathList(char **env)
 	int i = 0;
 	while (env[i] != NULL)
 	{
-		if (ft_strnstr(env[i], "PATH=/", ft_strlen(*env)))
+//		if (ft_strnstr(env[i], "PATH=/", ft_strlen(*env)))
+		if (ft_strnstr(env[i], "PATH=/", ft_strlen(env[i])))
 			break;
 		i++;
 	}
