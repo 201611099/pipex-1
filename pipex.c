@@ -93,14 +93,11 @@ int main(int argc, char *argv[], char **env)
 	// printAll(pathlist);
 	(void )env;
 
-	int exist = 1;
 
 	if (access(info.filenameIn, R_OK) == -1)
 	{
 		print_status(NOFILE);
-		exist = 0;
-		info.fdIn = open(info.filenameIn, O_CREAT | O_RDONLY, 0755);
-//		exit(1);
+//		exit(1); //파일이 없을 때 종료하면 안됨
 	}
 	else
 	{
@@ -127,7 +124,7 @@ int main(int argc, char *argv[], char **env)
 		// printf("%d\n", dup2(pipex[1], 1));
 		if (-1 == execve(info.InAbsolutepath, info.commandIn, g_env))
 		{
-//			print_status(EXECVE);
+			print_status(EXECVE);
 			exit(1);
 		}
 	}
@@ -135,8 +132,7 @@ int main(int argc, char *argv[], char **env)
 	{
 		waitpid(pid, NULL, 0); // 부모 프로세스
 	}
-	if (!exist)
-		unlink(info.filenameIn);
+
 	close(pipex[1]);
 	if (0 == (pid = fork())) // 자식 프로세스
 	{
@@ -145,7 +141,7 @@ int main(int argc, char *argv[], char **env)
 		dup2(info.fdOut, 1);
 		if (-1 == execve(info.OutAbsolutepath, info.commandOut, g_env))
 		{
-//			print_status(EXECVE);
+			print_status(EXECVE);
 			exit(1);
 		}
 	}
